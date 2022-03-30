@@ -21,6 +21,7 @@ export function processRef(refs: _ref, context: any) {
           }
           // c[a=1]
           else {
+            // TODO: change to filter
             localContext = tmpContext.find(tmpContextItem => execute({ xpr: ref.where }, tmpContextItem));
           }
         } else {
