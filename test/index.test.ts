@@ -1,4 +1,4 @@
-import cds from "@sap/cds";
+import cds from "@sap/cds-compiler";
 import { execute } from "../src";
 
 describe("CXN Test Suite", () => {
