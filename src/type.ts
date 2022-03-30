@@ -1,9 +1,15 @@
+/* eslint-disable max-len */
 
 type ref = { ref: _ref }
 type val = { val: _val }
 type xpr = { xpr: _xpr }
 type func = { func: _func }
-type operator = string
+
+type CompareOperator = "<" | "<=" | "<>" | "=" | ">" | ">="
+type NumericOperator = "." | "!=" | "*" | "+" | "-" | "/"
+type LogicOperator = "AND" | "OR"
+
+type operator = NumericOperator | CompareOperator | LogicOperator | "||" | "BETWEEN" | "IN" | "IS" | "LIKE" | "NOT" | "OVER"
 
 export type _val = string | number | boolean | null;
 export type _ref = (string | { id?: string, where?: CXN, args?: CXN[] })[]

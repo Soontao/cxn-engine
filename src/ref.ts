@@ -15,16 +15,14 @@ export function processRef(refs: _ref, context: any) {
       if (typeof ref.id === "string" && typeof ref.where === "object") {
         const tmpContext = localContext[ref?.id];
         if (tmpContext instanceof Array && ref.where instanceof Array) {
-          let localContextNext = undefined;
           // c[1]
           if (ref.where.length === 1 && typeof ref.where[0]?.val === "number") {
-            localContextNext = tmpContext[ref.where[0].val];
+            localContext = tmpContext[ref.where[0].val];
           }
           // c[a=1]
           else {
-            localContextNext = tmpContext.find(tmpContextItem => execute({ xpr: ref.where }, tmpContextItem));
+            localContext = tmpContext.find(tmpContextItem => execute({ xpr: ref.where }, tmpContextItem));
           }
-          localContext = localContextNext;
         } else {
           // TODO: error
         }
