@@ -22,6 +22,8 @@ jobs:
       - name: npm install
         run: npm install
 
+      - run: npm i --no-save @sap/cds sqlite3 express
+
       - name: npm test
         run: npm test
         env:
@@ -30,9 +32,7 @@ jobs:
       - name: npm shrinkwrap
         run: npm shrinkwrap
 
-      - run: npm run build
-
       - name: npm auth & publish
-        run: npm publish --access public --tag latest
+        run: npm run build && npm publish --access public --tag latest
         env:
           NODE_AUTH_TOKEN: ${{secrets.Z_NPM_TOKEN}}
