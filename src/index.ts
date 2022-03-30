@@ -1,6 +1,8 @@
 import type { CXN, JSFunction, _ref, _xpr } from "./type";
 
-const LOGIC_OPERATORS = ["and", "or", "=", "!="];
+const LOGIC_OPERATORS = ["and", "or"];
+
+const COMPARE_OPERATORS = ["=", "!=", "<", "<=", ">", ">="];
 
 const SIMPLE_OPERATORS = ["+", "-", "*", "/"];
 
@@ -75,6 +77,9 @@ function processXpr(xpr: _xpr, context: any) {
       if (SIMPLE_OPERATORS.includes(iXpr)) {
         applyNumericFunction(cal, iXpr);
       }
+      if (COMPARE_OPERATORS.includes(iXpr)) {
+        applyCompareFunction(cal, iXpr);
+      }
       if (LOGIC_OPERATORS.includes(iXpr)) {
         applyLogicFunction(cal, iXpr);
       }
@@ -95,17 +100,40 @@ function applyLogicFunction(cal: { exec?: any; tmp: Array<any>; }, op: string) {
         case "or":
           cal.tmp = [Boolean(cal.tmp[0]) || Boolean(cal.tmp[1])];
           break;
+      }
+      delete cal.exec;
+    }
+  };
+}
+
+function applyCompareFunction(cal: { exec?: any; tmp: Array<any>; }, op: string) {
+  cal.exec = () => {
+    if (cal.tmp.length >= 2) {
+      switch (op) {
         case "=":
           cal.tmp = [cal.tmp[0] === cal.tmp[1]];
           break;
         case "!=":
           cal.tmp = [cal.tmp[0] !== cal.tmp[1]];
           break;
+        case ">":
+          cal.tmp = [cal.tmp[0] > cal.tmp[1]];
+          break;
+        case "<":
+          cal.tmp = [cal.tmp[0] < cal.tmp[1]];
+          break;
+        case ">=":
+          cal.tmp = [cal.tmp[0] >= cal.tmp[1]];
+          break;
+        case "<=":
+          cal.tmp = [cal.tmp[0] <= cal.tmp[1]];
+          break;
       }
       delete cal.exec;
     }
   };
 }
+
 
 function applyNumericFunction(cal: { exec?: any; tmp: Array<any>; }, op: string) {
   cal.exec = () => {
