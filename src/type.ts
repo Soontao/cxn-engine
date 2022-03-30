@@ -1,5 +1,3 @@
-type Name = string
-
 
 type ref = { ref: _ref }
 type val = { val: _val }
@@ -8,7 +6,7 @@ type func = { func: _func }
 type operator = string
 
 export type _val = string | number | boolean | null;
-export type _ref = (Name | { id?: string, where?: CXN, args?: CXN[] })[]
+export type _ref = (string | { id?: string, where?: CXN, args?: CXN[] })[]
 export type _func = { func: string, args: (_ref | _val | operator)[], xpr?: _xpr }
 export type _xpr = (CXN | operator)[]
 
