@@ -1,4 +1,4 @@
-import type { CXN, JSFunction } from "./type";
+import type { CXN, JSFunction, _ref, _xpr } from "./type";
 
 const LOGIC_OPERATORS = ["and", "or", "=", "!="];
 
@@ -14,71 +14,75 @@ const SIMPLE_OPERATORS = ["+", "-", "*", "/"];
 function execute(expr: any, context?: any) {
 
   if (isValidCXN(expr)) {
-
     if ("val" in expr) {
       return expr.val;
     }
     if ("ref" in expr) {
-      let localContext = context;
-      for (const ref of expr.ref) {
-        if (typeof ref === "string") {
-          if (ref in localContext) {
-            localContext = localContext[ref];
-          } else {
-            // TODO: error
-          }
-        }
-        if (typeof ref === "object") {
-          if (typeof ref.id === "string" && typeof ref.where === "object") {
-            const tmpContext = localContext[ref?.id];
-            if (tmpContext instanceof Array && ref.where instanceof Array) {
-              let localContextNext = undefined;
-              // c[1]
-              if (ref.where.length === 1 && typeof ref.where[0]?.val === "number") {
-                localContextNext = tmpContext[ref.where[0].val];
-              }
-              // c[a=1]
-              else {
-                localContextNext = tmpContext.find(tmpContextItem => execute({ xpr: ref.where }, tmpContextItem));
-              }
-              localContext = localContextNext;
-            } else {
-              // TODO: error
-            }
-          }
-        }
-      }
-      return localContext;
-
+      return processRef(expr.ref, context);
     }
     if ("xpr" in expr) {
-      const { xpr } = expr;
-      const cal: { exec?: JSFunction, tmp: Array<any> } = { tmp: [] };
-
-      for (const iXpr of xpr) {
-        if (typeof iXpr === "object") {
-          cal.tmp.push(execute(iXpr, context));
-          cal.exec?.();
-          continue;
-        }
-        // operator
-        if (typeof iXpr === "string") {
-          if (SIMPLE_OPERATORS.includes(iXpr)) {
-            applyNumericFunction(cal, iXpr);
-          }
-          if (LOGIC_OPERATORS.includes(iXpr)) {
-            applyLogicFunction(cal, iXpr);
-          }
-          continue;
-        }
-      }
-
-      return cal.tmp[0];
-
+      return processXpr(expr.xpr, context);
     }
   } else {
     // TODO: throw error
   }
+}
+
+function processRef(refs: _ref, context: any) {
+  let localContext = context;
+  for (const ref of refs) {
+    if (typeof ref === "string") {
+      if (ref in localContext) {
+        localContext = localContext[ref];
+      } else {
+        // TODO: error
+      }
+    }
+    if (typeof ref === "object") {
+      if (typeof ref.id === "string" && typeof ref.where === "object") {
+        const tmpContext = localContext[ref?.id];
+        if (tmpContext instanceof Array && ref.where instanceof Array) {
+          let localContextNext = undefined;
+          // c[1]
+          if (ref.where.length === 1 && typeof ref.where[0]?.val === "number") {
+            localContextNext = tmpContext[ref.where[0].val];
+          }
+          // c[a=1]
+          else {
+            localContextNext = tmpContext.find(tmpContextItem => execute({ xpr: ref.where }, tmpContextItem));
+          }
+          localContext = localContextNext;
+        } else {
+          // TODO: error
+        }
+      }
+    }
+  }
+  return localContext;
+}
+
+function processXpr(xpr: _xpr, context: any) {
+  const cal: { exec?: JSFunction, tmp: Array<any> } = { tmp: [] };
+
+  for (const iXpr of xpr) {
+    if (typeof iXpr === "object") {
+      cal.tmp.push(execute(iXpr, context));
+      cal.exec?.();
+      continue;
+    }
+    // operator
+    if (typeof iXpr === "string") {
+      if (SIMPLE_OPERATORS.includes(iXpr)) {
+        applyNumericFunction(cal, iXpr);
+      }
+      if (LOGIC_OPERATORS.includes(iXpr)) {
+        applyLogicFunction(cal, iXpr);
+      }
+      continue;
+    }
+  }
+
+  return cal.tmp[0];
 }
 
 function applyLogicFunction(cal: { exec?: any; tmp: Array<any>; }, op: string) {
@@ -102,8 +106,6 @@ function applyLogicFunction(cal: { exec?: any; tmp: Array<any>; }, op: string) {
     }
   };
 }
-
-
 
 function applyNumericFunction(cal: { exec?: any; tmp: Array<any>; }, op: string) {
   cal.exec = () => {
