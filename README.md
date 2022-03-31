@@ -26,3 +26,5 @@
 - [x] avg
 - [x] min
 - [x] max
+
+## [LICENSE](./LICENSE)
