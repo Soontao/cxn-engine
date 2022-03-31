@@ -5,6 +5,10 @@
 [![node-test](https://github.com/Soontao/cxn-engine/actions/workflows/nodejs.yml/badge.svg)](https://github.com/Soontao/cxn-engine/actions/workflows/nodejs.yml)
 [![codecov](https://codecov.io/gh/Soontao/cxn-engine/branch/main/graph/badge.svg?token=qNex2ly3RN)](https://codecov.io/gh/Soontao/cxn-engine)
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Soontao_cxn-engine&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Soontao_cxn-engine)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=Soontao_cxn-engine&metric=bugs)](https://sonarcloud.io/summary/new_code?id=Soontao_cxn-engine)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=Soontao_cxn-engine&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=Soontao_cxn-engine)
+
 ## Get Started
 
 ```js

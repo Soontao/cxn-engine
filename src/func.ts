@@ -56,7 +56,6 @@ const utils = {
           if (!(targetObject instanceof Array) && attributeName in targetObject) {
             targetObject = targetObject[attributeName];
           } else {
-            targetObject = targetObject;
             curValExtractor = (cur) => cur[attributeName];
           }
           if (targetObject instanceof Array) {
