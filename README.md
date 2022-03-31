@@ -31,12 +31,12 @@ expect(execute(compileCXN("c.d[0].e.f.value"), ctx)).toBe(ctx.c.d[0].e.f.value);
 
 - [x] Logic
 - [x] Numeric
+  - [ ] Numeric Common Order (`*` and `/` should be calculated firstly)  
 - [x] Compare
 - [x] Like/Between
-- [ ] NOT
-- [ ] IN
-- [ ] IS
-- [ ] ?
+- [x] NOT
+- [x] IN
+- [x] IS
 
 ## Reference Evaluation
 
@@ -54,5 +54,14 @@ expect(execute(compileCXN("c.d[0].e.f.value"), ctx)).toBe(ctx.c.d[0].e.f.value);
 - [x] max
 - [ ] assign
 - [ ] append
+
+## Param Binding
+
+- [ ] param binding
+
+## Security
+
+- [ ] disable prototype access
+- [ ] execution timeout
 
 ## [LICENSE](./LICENSE)

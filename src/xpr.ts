@@ -1,147 +1,222 @@
 import { execute } from "./index";
-import type { JSFunction, Operator, xpr } from "./type";
+import type { Operator, xpr } from "./type";
 
-const LOGIC_OPERATORS = ["and", "or"];
+interface OperatorRule { opParts: Array<Operator>, valueNum: number, calculate: (values: Array<any>) => any }
 
-const COMPARE_OPERATORS = ["=", "!=", "<", "<=", ">", ">=", "like"];
+const calculations = {
+  in: ([left, right]: Array<any>) => {
+    if (right === undefined || right === null) {
+      return false;
+    }
 
-const SIMPLE_OPERATORS = ["+", "-", "*", "/"];
+    if (typeof right?.includes === "function") {
+      if (left instanceof Array) {
+        for (const item of left) {
+          if (!right.includes(item)) {
+            return false;
+          }
+        }
+        return true;
+      }
+      return right.includes(left);
+    }
+    // TODO: only support array
+    return true;
+  }
+};
 
-interface XprContext {
-  exec?: JSFunction;
-  /**
-   * store un-processed values
-   */
-  tmp: Array<any>;
-  /**
-   * store un-processed operators
-   */
-  ops: Array<Operator>;
+const opRules: Array<OperatorRule> = [
+  {
+    opParts: ["not", "between", "and"],
+    valueNum: 3,
+    calculate: ([value, min, max]) => !(value >= min && value <= max)
+  },
+  {
+    opParts: ["between", "and"],
+    valueNum: 3,
+    calculate: ([value, min, max]) => value >= min && value <= max
+  },
+  {
+    opParts: ["not", "like"],
+    valueNum: 2,
+    calculate: ([left, right]) => !(String(left).includes(String(right))), // TODO: undefined
+  },
+  {
+    opParts: ["not", "in"],
+    valueNum: 2,
+    calculate: (arg0) => !calculations.in(arg0),
+  },
+  {
+    opParts: ["is", "not", "null"],
+    valueNum: 1,
+    calculate: ([value]) => value !== null,
+  },
+  {
+    opParts: ["is", "null"],
+    valueNum: 1,
+    calculate: ([value]) => value === null,
+  },
+  {
+    opParts: ["+"],
+    valueNum: 2,
+    calculate: ([left, right]) => left + right,
+  },
+  {
+    opParts: ["-"],
+    valueNum: 2,
+    calculate: ([left, right]) => left - right,
+  },
+  {
+    opParts: ["*"],
+    valueNum: 2,
+    calculate: ([left, right]) => left * right,
+  },
+  {
+    opParts: ["/"],
+    valueNum: 2,
+    calculate: ([left, right]) => left / right,
+  },
+  {
+    opParts: ["="],
+    valueNum: 2,
+    calculate: ([left, right]) => left === right,
+  },
+  {
+    opParts: ["!="],
+    valueNum: 2,
+    calculate: ([left, right]) => left !== right,
+  },
+  {
+    opParts: [">"],
+    valueNum: 2,
+    calculate: ([left, right]) => left > right,
+  },
+  {
+    opParts: [">="],
+    valueNum: 2,
+    calculate: ([left, right]) => left >= right,
+  },
+  {
+    opParts: ["<"],
+    valueNum: 2,
+    calculate: ([left, right]) => left < right,
+  },
+  {
+    opParts: ["<="],
+    valueNum: 2,
+    calculate: ([left, right]) => left <= right,
+  },
+  {
+    opParts: ["in"],
+    valueNum: 2,
+    calculate: calculations.in,
+  },
+  {
+    opParts: ["like"],
+    valueNum: 2,
+    calculate: ([left, right]) => String(left).includes(String(right)), // TODO: undefined
+  },
+  {
+    opParts: ["and"],
+    valueNum: 2,
+    calculate: ([left, right]) => Boolean(left) && Boolean(right),
+  },
+  {
+    opParts: ["or"],
+    valueNum: 2,
+    calculate: ([left, right]) => Boolean(left) || Boolean(right),
+  },
+];
+
+class OperatorStore {
+
+  #values: Array<any> = [];
+
+  #ops: Array<Operator> = [];
+
+  public getLastValue() {
+    if (this.#values.length > 0) {
+      return this.#values[this.#values.length - 1];
+    }
+    return undefined;
+  }
+
+  public addValue(value: any) {
+    this.#values.push(value);
+    return this;
+  }
+
+  public pushOp(op: Operator) {
+    this.#ops.push(op);
+    return this;
+  }
+
+  public acquireOp(opParts: Array<Operator>, valueNum: number): { ok: true, values: Array<any> } | { ok: false } {
+    if (this.#ops.length >= opParts.length && this.#values.length >= valueNum) {
+      const tmpOps = this.#ops.slice(this.#ops.length - opParts.length);
+      for (let idx = 0; idx < tmpOps.length; idx++) {
+        const tmpOp = tmpOps[idx];
+        if (tmpOp !== opParts[idx]) {
+          return { ok: false, };
+        }
+      }
+      const values = this.#values.slice(this.#values.length - valueNum);
+      this.#ops = this.#ops.slice(0, this.#ops.length - opParts.length);
+      this.#values = this.#values.slice(0, this.#values.length - valueNum);
+      return { ok: true, values };
+    }
+    return { ok: false, };
+  }
+
+  public execute() {
+    while (true) {
+      let executed = false;
+      for (const rule of opRules) {
+        const acquireResult = this.acquireOp(rule.opParts, rule.valueNum);
+        if (acquireResult.ok === true) {
+          executed = true;
+          this.addValue(rule.calculate(acquireResult.values));
+          break;
+        }
+      }
+      if (executed === false) {
+        break;
+      }
+    }
+
+  }
+
 }
 
-export function processXpr({ xpr }: xpr, context: any) {
-  const cal: XprContext = { tmp: [], ops: [] };
+
+
+/**
+ * process Operator Expressions
+ * 
+ * @param param0 
+ * @param context 
+ * @returns 
+ */
+export function processXprNew({ xpr }: xpr, context: any) {
+  const store = new OperatorStore();
 
   for (const iXpr of xpr) {
-    if (typeof iXpr === "object") {
-      cal.tmp.push(execute(iXpr, context));
-      cal.exec?.();
+    if (typeof iXpr === "string") {
+      store.pushOp(iXpr);
       continue;
     }
-    // operator
-    if (typeof iXpr === "string") {
-      if (SIMPLE_OPERATORS.includes(iXpr)) {
-        applyNumericFunction(cal, iXpr);
-        continue;
-      }
-      if (COMPARE_OPERATORS.includes(iXpr)) {
-        applyCompareFunction(cal, iXpr);
-        continue;
-      }
-      if (LOGIC_OPERATORS.includes(iXpr)) {
-        applyLogicFunction(cal, iXpr);
-        continue;
-      }
-      cal.ops.push(iXpr);
+    if (typeof iXpr === "object") {
+      const value = execute(iXpr, context);
+      store.addValue(value);
+      store.execute();
       continue;
     }
   }
 
-  return cal.tmp[0];
+  store.execute(); // final execution
+
+  return store.getLastValue();
+
 }
 
 
-function applyLogicFunction(cal: XprContext, op: Operator) {
-  cal.exec = () => {
-    if (cal.tmp.length >= 2) {
-      const [left, right] = cal.tmp;
-      switch (op) {
-        case "and":
-          if (cal.ops.length > 0) {
-            // a between 1 and 2
-            // { xpr: [ { ref: [ 'a' ] }, 'between', { val: 1 }, 'and', { val: 2 } ] }
-            if (cal.ops[cal.ops.length - 1] === "between") {
-              const [value, min, max] = cal.tmp;
-              cal.tmp = [value >= min && value <= max];
-              cal.ops = cal.ops.slice(0, cal.ops.length - 1);
-            }
-            // a not between 1 and 2
-            if (cal.ops.length > 0 && cal.ops[cal.ops.length - 1] === "not") {
-              cal.tmp = [!cal.tmp[0]];
-              cal.ops = cal.ops.slice(0, cal.ops.length - 1);
-            }
-          } else {
-            cal.tmp = [Boolean(left) && Boolean(right)];
-          }
-          break;
-        case "or":
-          cal.tmp = [Boolean(left) || Boolean(right)];
-          break;
-      }
-      delete cal.exec;
-    }
-
-  };
-}
-
-function applyCompareFunction(cal: XprContext, op: string) {
-  cal.exec = () => {
-    if (cal.tmp.length >= 2) {
-      const [left, right] = cal.tmp;
-      switch (op) {
-        case "=":
-          cal.tmp = [left === right];
-          break;
-        case "!=":
-          cal.tmp = [left !== right];
-          break;
-        case ">":
-          cal.tmp = [left > right];
-          break;
-        case "<":
-          cal.tmp = [left < right];
-          break;
-        case ">=":
-          cal.tmp = [left >= right];
-          break;
-        case "<=":
-          cal.tmp = [left <= right];
-          break;
-        case "like":
-          if (typeof left?.includes === "function") {
-            cal.tmp = [left.includes(right)];
-          }
-          cal.tmp = [String(left).includes(String(right))];
-          if (cal.ops.length > 0 && cal.ops[cal.ops.length - 1] === "not") {
-            cal.tmp = [!cal.tmp[0]];
-            cal.ops = cal.ops.slice(0, cal.ops.length - 1);
-          }
-      }
-      delete cal.exec;
-    }
-  };
-}
-
-
-function applyNumericFunction(cal: XprContext, op: string) {
-  cal.exec = () => {
-    if (cal.tmp.length >= 2) {
-      const [left, right] = cal.tmp;
-      switch (op) {
-        case "+":
-          cal.tmp = [left + right];
-          break;
-        case "-":
-          cal.tmp = [left - right];
-          break;
-        case "*":
-          cal.tmp = [left * right];
-          break;
-        case "/":
-          cal.tmp = [left / right];
-          break;
-      }
-      delete cal.exec;
-    }
-  };
-}

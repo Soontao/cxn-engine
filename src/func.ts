@@ -2,10 +2,10 @@
 import { execute } from ".";
 import { isRefExpr } from "./expr";
 import { processRef } from "./ref";
-import { Args, JSFunction, ref, _func } from "./type";
+import { Args, func, JSFunction, ref } from "./type";
 
 
-export function processFunc(funcExpr: _func, context: any) {
+export function processFunc(funcExpr: func, context: any) {
   const { func, args } = funcExpr;
 
   if (func in simpleFunctions) {

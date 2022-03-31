@@ -76,6 +76,20 @@ describe("CXN Test Suite", () => {
 
   });
 
+  it("should return null for undefined values", () => {
+    const ctx = {
+      a: { b: [{ e: [1, 2, 3, { d: 1 }] }] },
+      w: "forever",
+    };
+    expect(execute(compileCXN("acb.c"), ctx)).toBe(null);
+    expect(execute(compileCXN("a.b.c"), ctx)).toBe(null);
+    expect(execute(compileCXN("w.c"), ctx)).toBe(null);
+    expect(execute(compileCXN("w[0]"), ctx)).toBe("f");
+    expect(execute(compileCXN("w.c.a"), ctx)).toBe(null);
+    expect(execute(compileCXN("a.b[1].a"), ctx)).toBe(null);
+    expect(execute(compileCXN("a.b[0].e"), ctx)).not.toBe(null);
+  });
+
   it("should support not between operator", () => {
     expect(execute(compileCXN("a not between 10 and 11"), { a: 10 })).toBe(false);
     expect(execute(compileCXN("a not between 10 and 11"), { a: 9 })).toBe(true);
@@ -103,6 +117,56 @@ describe("CXN Test Suite", () => {
     expect(execute(compileCXN("last(a)"), { a: 3 })).toBe(3);
   });
 
+
+  it("should support in operator", () => {
+    const ctx = {
+      a: 1,
+      b: [1, 2],
+      c: [1, 2, 3, 4],
+      d: [4, 5, 6]
+    };
+
+    expect(execute(compileCXN("a in b"), ctx)).toBe(true);
+    expect(execute(compileCXN("a in c"), ctx)).toBe(true);
+    expect(execute(compileCXN("a in d"), ctx)).toBe(false);
+    expect(execute(compileCXN("b in c"), ctx)).toBe(true);
+    expect(execute(compileCXN("b in d"), ctx)).toBe(false);
+    expect(execute(compileCXN("c in d"), ctx)).toBe(false);
+
+  });
+
+  it("should support not in operator", () => {
+    const ctx = {
+      a: 1,
+      b: [1, 2],
+      c: [1, 2, 3, 4],
+      d: [4, 5, 6]
+    };
+
+    expect(execute(compileCXN("a not in b"), ctx)).toBe(false);
+    expect(execute(compileCXN("a not in c"), ctx)).toBe(false);
+    expect(execute(compileCXN("a not in d"), ctx)).toBe(true);
+    expect(execute(compileCXN("b not in c"), ctx)).toBe(false);
+    expect(execute(compileCXN("b not in d"), ctx)).toBe(true);
+    expect(execute(compileCXN("c not in d"), ctx)).toBe(true);
+
+  });
+
+  it("should support is null operator", () => {
+    const ctx = {
+      a: 1,
+      b: [1, 2],
+      c: [1, 2, 3, 4],
+      d: [4, 5, 6]
+    };
+
+    expect(execute(compileCXN("a is null"), ctx)).toBe(false);
+    expect(execute(compileCXN("a[0] is null"), ctx)).toBe(true);
+    expect(execute(compileCXN("c[99] is null"), ctx)).toBe(true);
+    expect(execute(compileCXN("a is not null"), ctx)).toBe(true);
+    expect(execute(compileCXN("c[3] is not null"), ctx)).toBe(true);
+  });
+
   it("should support basic aggregation functions (basic)", () => {
     expect(execute(compileCXN("sum(a)"), { a: [11, 12, 13] })).toBe(36);
     expect(execute(compileCXN("avg(a)"), { a: [11, 12, 13] })).toBe(12);
@@ -121,6 +185,22 @@ describe("CXN Test Suite", () => {
         ]
       }
     })).toBe(36);
+  });
+
+  it("should support apply filter by function", () => {
+    expect(
+      execute(
+        compileCXN("first(a.b[first(e) = 10])"),
+        {
+          a: {
+            b: [
+              { name: "first one", e: [12, 12, 12] },
+              { name: "second one", e: [10, 12, 12] }
+            ]
+          }
+        }
+      )
+    ).toStrictEqual({ name: "second one", e: [10, 12, 12] });
   });
 
 });

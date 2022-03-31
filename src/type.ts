@@ -1,8 +1,11 @@
 /* eslint-disable max-len */
 import type { Functions } from "./func";
 
-export type ref = {
-  ref: _ref,
+/**
+ * Binding Parameters
+ */
+export type param = {
+  ref: _ref
   /**
    * @example
    * ```js
@@ -10,18 +13,20 @@ export type ref = {
    * { xpr: [ { ref: [ 'a' ] }, '>', { ref: [ '?' ], param: true } ] }
    * ```
    */
-  param?: boolean
-}
+  param: true
+};
+
+export type ref = { ref: _ref }
 export type val = { val: _val }
 export type xpr = { xpr: _xpr }
-export type func = { func: _func }
+export type func = { func: Functions, args: Args, xpr?: _xpr }
 
 type AnyOperator = "*"
 type CompareOperator = "<" | "<=" | "<>" | "=" | "!=" | ">" | ">="
 type NumericOperator = "*" | "+" | "-" | "/"
 type LogicOperator = "AND" | "OR"
 
-type operator = NumericOperator | CompareOperator | LogicOperator | "||" | "BETWEEN" | "IN" | "IS" | "LIKE" | "NOT" | "OVER"
+type operator = NumericOperator | CompareOperator | LogicOperator | "||" | "BETWEEN" | "IN" | "IS" | "LIKE" | "NOT" | "OVER" | "NULL"
 
 type ArrayArgs = (ref | val | AnyOperator)[];
 type NamedArgs = { [argName: string]: (ref | val) };
@@ -32,7 +37,6 @@ export type Args = ArrayArgs | NamedArgs;
 export type Operator = Lowercase<operator>;
 export type _val = string | number | boolean | null;
 export type _ref = Array<Identifier | ObjectQuery>
-export type _func = { func: Functions, args: Args, xpr?: _xpr }
 export type _xpr = (CXN | Operator)[]
 
 export type CXN = ref | val | xpr | func
