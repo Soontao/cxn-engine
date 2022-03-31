@@ -1,3 +1,4 @@
+import { processFunc } from "./func";
 import { processRef } from "./ref";
 import type { CXN } from "./type";
 import { processXpr } from "./xpr";
@@ -9,7 +10,7 @@ import { processXpr } from "./xpr";
  * @param context data context
  * @returns 
  */
-function execute(expr: any, context?: any) {
+function execute(expr: any, context?: any): any {
 
   if (isValidCXN(expr)) {
     if ("val" in expr) {
@@ -20,6 +21,9 @@ function execute(expr: any, context?: any) {
     }
     if ("xpr" in expr) {
       return processXpr(expr.xpr, context);
+    }
+    if ("func" in expr) {
+      return processFunc(expr as any, context);
     }
   } else {
     // TODO: throw error

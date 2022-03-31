@@ -75,4 +75,9 @@ describe("CXN Test Suite", () => {
     expect(execute(cds.parse.expr("c.d[0].e.f.value"), ctx)).toBe(ctx.c.d[0].e.f.value);
   });
 
+  it("should support basic functions", () => {
+    expect(execute(cds.parse.expr("first(a)"), { a: [1, 2, 3] })).toBe(1);
+    expect(execute(cds.parse.expr("last(a)"), { a: [1, 2, 3] })).toBe(3);
+  });
+
 });

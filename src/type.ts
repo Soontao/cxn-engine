@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-
+import { functions } from "./func";
 type ref = { ref: _ref }
 type val = { val: _val }
 type xpr = { xpr: _xpr }
@@ -13,7 +13,7 @@ type operator = NumericOperator | CompareOperator | LogicOperator | "||" | "BETW
 export type Operator = Lowercase<operator>;
 export type _val = string | number | boolean | null;
 export type _ref = (string | { id?: string, where?: CXN, args?: CXN[] })[]
-export type _func = { func: string, args: (_ref | _val | Operator)[], xpr?: _xpr }
+export type _func = { func: keyof typeof functions, args: (_ref | _val | Operator)[], xpr?: _xpr }
 export type _xpr = (CXN | Operator)[]
 
 export type CXN = ref | val | xpr | func
