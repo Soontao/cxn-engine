@@ -88,6 +88,8 @@ describe("CXN Test Suite", () => {
   it("should support basic aggregation functions (basic)", () => {
     expect(execute(compileCXN("sum(a)"), { a: [11, 12, 13] })).toBe(36);
     expect(execute(compileCXN("avg(a)"), { a: [11, 12, 13] })).toBe(12);
+    expect(execute(compileCXN("min(a)"), { a: [13, 11, 12] })).toBe(11);
+    expect(execute(compileCXN("max(a)"), { a: [11, 12, 13] })).toBe(13);
   });
 
   it("should support basic aggregation functions (attribute)", () => {

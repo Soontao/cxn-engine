@@ -24,3 +24,5 @@
 - [x] last
 - [x] sum
 - [x] avg
+- [x] min
+- [x] max

@@ -75,6 +75,32 @@ export const aggregationFunctions = {
   avg: utils.createAggregationFunction((targetObject, valueExtractor) => {
     return targetObject.reduce((pre, cur) => pre + valueExtractor(cur), 0) / targetObject.length;
   }),
+  min: utils.createAggregationFunction((targetObject, valueExtractor) => {
+    let min = undefined;
+    for (const targetItem of targetObject) {
+      const value = valueExtractor(targetItem);
+      if (min === undefined) {
+        min = value;
+      }
+      if (min > value) {
+        min = value;
+      }
+    }
+    return min;
+  }),
+  max: utils.createAggregationFunction((targetObject, valueExtractor) => {
+    let max = undefined;
+    for (const targetItem of targetObject) {
+      const value = valueExtractor(targetItem);
+      if (max === undefined) {
+        max = value;
+      }
+      if (max < value) {
+        max = value;
+      }
+    }
+    return max;
+  }),
 };
 
 
