@@ -1,7 +1,17 @@
 /* eslint-disable max-len */
 import type { Functions } from "./func";
 
-export type ref = { ref: _ref }
+export type ref = {
+  ref: _ref,
+  /**
+   * @example
+   * ```js
+   * cds.parse.expr("a > ?")
+   * { xpr: [ { ref: [ 'a' ] }, '>', { ref: [ '?' ], param: true } ] }
+   * ```
+   */
+  param?: boolean
+}
 export type val = { val: _val }
 export type xpr = { xpr: _xpr }
 export type func = { func: _func }
@@ -17,7 +27,7 @@ type ArrayArgs = (ref | val | AnyOperator)[];
 type NamedArgs = { [argName: string]: (ref | val) };
 
 export type Identifier = string
-export type ObjectQuery =  { id?: string, where?: CXN, args?: CXN[] }
+export type ObjectQuery = { id?: string, where?: CXN, args?: CXN[] }
 export type Args = ArrayArgs | NamedArgs;
 export type Operator = Lowercase<operator>;
 export type _val = string | number | boolean | null;

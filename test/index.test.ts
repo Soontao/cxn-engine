@@ -1,9 +1,14 @@
 import cds from "@sap/cds-compiler";
-import { execute } from "../src";
+import { createEngine, execute } from "../src";
 
 const compileCXN = cds.parse.expr;
 
 describe("CXN Test Suite", () => {
+
+  it("should support create engine", () => {
+    const engine = createEngine({ isTrue: "a = true" });
+    expect(engine.isTrue({ a: true })).toBe(true);
+  });
 
   it("should support basic evaluation", () => {
     expect(execute(compileCXN("1"))).toBe(1);
@@ -54,6 +59,13 @@ describe("CXN Test Suite", () => {
     expect(execute(compileCXN("'abc' like 'abcd'"))).toBe(false);
   });
 
+  it("should support not like", () => {
+    expect(execute(compileCXN("'abc' not like 'a'"))).toBe(false);
+    expect(execute(compileCXN("'abc' not like 'ab'"))).toBe(false);
+    expect(execute(compileCXN("'abc' not like 'abc'"))).toBe(false);
+    expect(execute(compileCXN("'abc' not like 'abcd'"))).toBe(true);
+  });
+
   it("should support between operator", () => {
     expect(execute(compileCXN("a between 10 and 11"), { a: 10 })).toBe(true);
     expect(execute(compileCXN("a between 10 and 11"), { a: 11 })).toBe(true);
@@ -61,6 +73,12 @@ describe("CXN Test Suite", () => {
     expect(execute(compileCXN("a between 10 and 11"), { a: 9 })).toBe(false);
     expect(execute(compileCXN("a between 10 and 11 and true"), { a: 10 })).toBe(true);
     expect(execute(compileCXN("a between 10 and 11 and false"), { a: 10 })).toBe(false);
+
+  });
+
+  it("should support not between operator", () => {
+    expect(execute(compileCXN("a not between 10 and 11"), { a: 10 })).toBe(false);
+    expect(execute(compileCXN("a not between 10 and 11"), { a: 9 })).toBe(true);
   });
 
   it("should support evaluate reference", () => {

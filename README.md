@@ -5,12 +5,38 @@
 [![node-test](https://github.com/Soontao/cxn-engine/actions/workflows/nodejs.yml/badge.svg)](https://github.com/Soontao/cxn-engine/actions/workflows/nodejs.yml)
 [![codecov](https://codecov.io/gh/Soontao/cxn-engine/branch/main/graph/badge.svg?token=qNex2ly3RN)](https://codecov.io/gh/Soontao/cxn-engine)
 
+## Get Started
+
+```js
+const { execute } = require("cxn-engine")
+const cds = require("@sap/cds-compiler");
+const compileCXN = cds.parse.expr;
+
+const ctx = {
+  a: ["1", "2", 3, 4],
+  b: [{ c: 1 }, { c: 2, name: "a name" }, { c: 3 }],
+  c: { d: [{ e: { f: { value: 1 } } }] }
+};
+
+expect(execute(compileCXN("a"), ctx)).toBe(ctx.a);
+expect(execute(compileCXN("a[0]"), ctx)).toBe(ctx.a[0]);
+expect(execute(compileCXN("a[2]"), ctx)).toBe(ctx.a[2]);
+expect(execute(compileCXN("b[c=2]"), ctx)).toStrictEqual([ctx.b[1]]);
+expect(execute(compileCXN("first(b[c=2])"), ctx)).toBe(ctx.b[1]);
+expect(execute(compileCXN("b[c=2].name"), ctx)).toBe(ctx.b[1].name);
+expect(execute(compileCXN("c.d[0].e.f.value"), ctx)).toBe(ctx.c.d[0].e.f.value);
+```
+
 ## Operators
 
 - [x] Logic
 - [x] Numeric
 - [x] Compare
 - [x] Like/Between
+- [ ] NOT
+- [ ] IN
+- [ ] IS
+- [ ] ?
 
 ## Reference Evaluation
 
@@ -26,5 +52,7 @@
 - [x] avg
 - [x] min
 - [x] max
+- [ ] assign
+- [ ] append
 
 ## [LICENSE](./LICENSE)

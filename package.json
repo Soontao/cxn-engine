@@ -1,10 +1,19 @@
 {
-  "name": "template",
+  "name": "cxn-engine",
   "version": "0.0.1",
   "main": "lib/index.js",
   "engines": {
     "node": ">=12",
     "npm": ">=6"
+  },
+  "description": "execute CXN expression",
+  "author": {
+    "name": "Theo Sun",
+    "email": "theo.sun.github@outlook.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Soontao/cxn-engine"
   },
   "scripts": {
     "test": "jest --detectOpenHandles --passWithNoTests",
