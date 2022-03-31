@@ -2,8 +2,6 @@ import { processRef } from "./ref";
 import type { CXN } from "./type";
 import { processXpr } from "./xpr";
 
-
-
 /**
  * execute CXN expression
  * 

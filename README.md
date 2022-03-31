@@ -7,14 +7,15 @@
 
 ## Operators
 
-- [ ] Logic
-- [ ] Numeric
-- [ ] Compare
+- [x] Logic
+- [x] Numeric
+- [x] Compare
+- [x] Like/Between
 
 ## Reference Evaluation
 
 - [x] Chain
-- [ ] Deep
+- [x] Deep
 - [ ] Where
 
 ## Built-in Functions

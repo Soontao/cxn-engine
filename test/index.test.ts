@@ -15,6 +15,8 @@ describe("CXN Test Suite", () => {
   it("should support basic operator", () => {
     expect(execute(cds.parse.expr("2 * 2 + 1"))).toBe(5);
     expect(execute(cds.parse.expr("2 * (2 + 1)"))).toBe(6);
+    expect(execute(cds.parse.expr("2 * (2 - 1)"))).toBe(2);
+    expect(execute(cds.parse.expr("2 / (2 - 1)"))).toBe(2);
   });
 
   it("should support logic operator", () => {
@@ -29,6 +31,32 @@ describe("CXN Test Suite", () => {
     expect(execute(cds.parse.expr("1 or 0"))).toBe(true);
     expect(execute(cds.parse.expr("0 or 0"))).toBe(false);
 
+  });
+
+  it("should support compare operator", async () => {
+    expect(execute(cds.parse.expr("1 = 1"))).toBe(true);
+    expect(execute(cds.parse.expr("1 >= 1"))).toBe(true);
+    expect(execute(cds.parse.expr("0 > 1"))).toBe(false);
+    expect(execute(cds.parse.expr("1 >= 0"))).toBe(true);
+    expect(execute(cds.parse.expr("0 != 0"))).toBe(false);
+
+    expect(execute(cds.parse.expr("1 <= 1"))).toBe(true);
+    expect(execute(cds.parse.expr("0 < 1"))).toBe(true);
+    expect(execute(cds.parse.expr("1 <= 0"))).toBe(false);
+
+    expect(execute(cds.parse.expr("'a' = 'b'"))).toBe(false);
+    expect(execute(cds.parse.expr("'a' = 'a'"))).toBe(true);
+    expect(execute(cds.parse.expr("'abc' like 'a'"))).toBe(true);
+    expect(execute(cds.parse.expr("'abc' like 'ab'"))).toBe(true);
+    expect(execute(cds.parse.expr("'abc' like 'abc'"))).toBe(true);
+    expect(execute(cds.parse.expr("'abc' like 'abcd'"))).toBe(false);
+  });
+
+  it("should support between operator", () => {
+    expect(execute(cds.parse.expr("a between 10 and 11"), { a: 10 })).toBe(true);
+    expect(execute(cds.parse.expr("a between 10 and 11"), { a: 11 })).toBe(true);
+    expect(execute(cds.parse.expr("a between 10 and 11"), { a: 12 })).toBe(false);
+    expect(execute(cds.parse.expr("a between 10 and 11"), { a: 9 })).toBe(false);
   });
 
   it("should support evaluate reference", () => {
