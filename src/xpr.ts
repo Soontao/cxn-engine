@@ -110,9 +110,6 @@ function applyNumericFunction(cal: { exec?: any; tmp: Array<any>; }, op: string)
         case "/":
           cal.tmp = [left / right];
           break;
-        default:
-          // TODO: warn
-          break;
       }
       delete cal.exec;
     }

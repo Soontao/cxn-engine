@@ -57,6 +57,8 @@ describe("CXN Test Suite", () => {
     expect(execute(cds.parse.expr("a between 10 and 11"), { a: 11 })).toBe(true);
     expect(execute(cds.parse.expr("a between 10 and 11"), { a: 12 })).toBe(false);
     expect(execute(cds.parse.expr("a between 10 and 11"), { a: 9 })).toBe(false);
+    expect(execute(cds.parse.expr("a between 10 and 11 and true"), { a: 10 })).toBe(true);
+    expect(execute(cds.parse.expr("a between 10 and 11 and false"), { a: 10 })).toBe(false);
   });
 
   it("should support evaluate reference", () => {
