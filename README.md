@@ -20,7 +20,7 @@
 
 ## Built-in Functions
 
-- [ ] first
-- [ ] last
-- [ ] sum
-- [ ] avg
+- [x] first
+- [x] last
+- [x] sum
+- [x] avg

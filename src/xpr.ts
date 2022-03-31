@@ -1,5 +1,5 @@
 import { execute } from "./index";
-import type { JSFunction, Operator, _xpr } from "./type";
+import type { JSFunction, Operator, xpr } from "./type";
 
 const LOGIC_OPERATORS = ["and", "or"];
 
@@ -7,7 +7,7 @@ const COMPARE_OPERATORS = ["=", "!=", "<", "<=", ">", ">=", "like"];
 
 const SIMPLE_OPERATORS = ["+", "-", "*", "/"];
 
-export function processXpr(xpr: _xpr, context: any) {
+export function processXpr({ xpr }: xpr, context: any) {
   const cal: { exec?: JSFunction, tmp: Array<any> } = { tmp: [] };
 
   for (const iXpr of xpr) {

@@ -1,3 +1,4 @@
+import { isFuncExpr, isRefExpr, isValExpr, isXprExpr } from "./expr";
 import { processFunc } from "./func";
 import { processRef } from "./ref";
 import type { CXN } from "./type";
@@ -17,10 +18,10 @@ function execute(expr: any, context?: any): any {
       return expr.val;
     }
     if ("ref" in expr) {
-      return processRef(expr.ref, context);
+      return processRef(expr, context);
     }
     if ("xpr" in expr) {
-      return processXpr(expr.xpr, context);
+      return processXpr(expr, context);
     }
     if ("func" in expr) {
       return processFunc(expr as any, context);
@@ -39,8 +40,7 @@ function execute(expr: any, context?: any): any {
  * @returns 
  */
 function isValidCXN(expr: any): expr is CXN {
-  // TODO: check the CXN is valid or not
-  return true;
+  return isRefExpr(expr) || isXprExpr(expr) || isValExpr(expr) || isFuncExpr(expr);
 }
 
 
