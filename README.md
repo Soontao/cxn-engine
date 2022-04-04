@@ -35,6 +35,7 @@ expect(execute(compileCXN("c.d[0].e.f.value"), ctx)).toBe(ctx.c.d[0].e.f.value);
 ## Operators
 
 - [x] Logic
+  - [ ] Deep Equal
 - [x] Numeric
   - [ ] Numeric Common Order (`*` and `/` should be calculated firstly)  
 - [x] Compare
