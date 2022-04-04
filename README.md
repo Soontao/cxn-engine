@@ -59,6 +59,8 @@ expect(execute(compileCXN("c.d[0].e.f.value"), ctx)).toBe(ctx.c.d[0].e.f.value);
 - [ ] assign
 - [ ] append
 - [ ] groupBy
+- [x] uuid
+- [x] nanoid
 
 ## Param Binding
 
