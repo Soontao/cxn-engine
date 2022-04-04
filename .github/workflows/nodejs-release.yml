@@ -22,8 +22,7 @@ jobs:
       - name: npm install
         run: npm install
 
-      - run: npm i --no-save @sap/cds-compiler
-
+      - run: npm i --no-save @sap/cds-compiler uuid nanoid
 
       - name: npm test
         run: npm test

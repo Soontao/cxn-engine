@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable prefer-const */
 import { execute } from ".";
 import { isRefExpr } from "./expr";
@@ -31,6 +32,8 @@ export function processFunc(funcExpr: func, context: any) {
 }
 
 export const simpleFunctions = {
+  uuid() { return require("uuid").v4(); },
+  nanoid() { return require("nanoid").nanoid(); },
   first(value: Array<any>) { return value instanceof Array ? value[0] : value; },
   last(value: Array<any>) { return value instanceof Array ? value[value.length - 1] : value; },
 };

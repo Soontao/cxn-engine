@@ -76,6 +76,11 @@ describe("CXN Test Suite", () => {
 
   });
 
+  it("should support id generator", () => {
+    expect(execute(compileCXN("uuid()"))).toHaveLength(36);
+    expect(execute(compileCXN("nanoid()"))).toHaveLength(21);
+  });
+
   it("should return null for undefined values", () => {
     const ctx = {
       a: { b: [{ e: [1, 2, 3, { d: 1 }] }] },
