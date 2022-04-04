@@ -64,6 +64,7 @@ const utils = {
           if (targetObject instanceof Array) {
             return impl(targetObject, curValExtractor);
           }
+          // TODO: throw error
         }
       }
     };
