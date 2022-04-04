@@ -2,6 +2,7 @@
 
 > general CXN execution engine
 
+[![npm](https://img.shields.io/npm/v/cxn-engine)](https://www.npmjs.com/package/cxn-engine)
 [![node-test](https://github.com/Soontao/cxn-engine/actions/workflows/nodejs.yml/badge.svg)](https://github.com/Soontao/cxn-engine/actions/workflows/nodejs.yml)
 [![codecov](https://codecov.io/gh/Soontao/cxn-engine/branch/main/graph/badge.svg?token=qNex2ly3RN)](https://codecov.io/gh/Soontao/cxn-engine)
 
