@@ -79,6 +79,26 @@ describe("CXN Test Suite", () => {
     expect(execute(compileCXN("exists b[3]"), ctx)).toBe(false);
   });
 
+  it("not should support not exists operator", () => {
+    const ctx = {
+      a: ["1", "2", 3, 4, [], 0],
+      b: [{ c: 1 }, { c: 2, name: "a name" }, { c: 3 }, {}],
+      c: { d: [{ e: { f: { value: 1 } } }] },
+      e: [],
+      f: Symbol("a")
+    };
+
+    expect(execute(compileCXN("not exists a"), ctx)).toBe(false);
+    expect(execute(compileCXN("not exists a[0]"), ctx)).toBe(false);
+    expect(execute(compileCXN("not exists b[0]"), ctx)).toBe(false);
+    expect(execute(compileCXN("not exists c.d[e.f.value=1]"), ctx)).toBe(false);
+    expect(execute(compileCXN("not exists f"), ctx)).toBe(false);
+    expect(execute(compileCXN("not exists a[4]"), ctx)).toBe(true);
+    expect(execute(compileCXN("not exists a[5]"), ctx)).toBe(true);
+    expect(execute(compileCXN("not exists a[1000]"), ctx)).toBe(true);
+    expect(execute(compileCXN("not exists b[3]"), ctx)).toBe(true);
+  });
+
   it("should support not like", () => {
     expect(execute(compileCXN("'abc' not like 'a'"))).toBe(false);
     expect(execute(compileCXN("'abc' not like 'ab'"))).toBe(false);

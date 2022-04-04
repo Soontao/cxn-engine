@@ -22,6 +22,24 @@ const calculations = {
     }
     // TODO: only support array
     return true;
+  },
+  exists: ([value]: Array<any>) => {
+    if (value === null || value === undefined) {
+      return false;
+    }
+    if (typeof value === "string") {
+      return value.length > 0;
+    }
+    if (value instanceof Array) {
+      return value.length > 0;
+    }
+    if (typeof value === "object" && Object.getPrototypeOf(value) === Object.prototype) {
+      return Object.keys(value).length > 0;
+    }
+    if (typeof value === "number" || typeof value === "bigint") {
+      return value !== 0;
+    }
+    return true;
   }
 };
 
@@ -45,6 +63,11 @@ const opRules: Array<OperatorRule> = [
     opParts: ["not", "in"],
     valueNum: 2,
     calculate: (arg0) => !calculations.in(arg0),
+  },
+  {
+    opParts: ["not", "exists"],
+    valueNum: 1,
+    calculate: (arg0) => !calculations.exists(arg0),
   },
   {
     opParts: ["is", "not", "null"],
@@ -129,24 +152,7 @@ const opRules: Array<OperatorRule> = [
   {
     opParts: ["exists"],
     valueNum: 1,
-    calculate: ([value]) => {
-      if (value === null || value === undefined) {
-        return false;
-      }
-      if (typeof value === "string") {
-        return value.length > 0;
-      }
-      if (value instanceof Array) {
-        return value.length > 0;
-      }
-      if (typeof value === "object" && Object.getPrototypeOf(value) === Object.prototype) {
-        return Object.keys(value).length > 0;
-      }
-      if (typeof value === "number" || typeof value === "bigint") {
-        return value !== 0;
-      }
-      return true;
-    }
+    calculate: calculations.exists
   }
 ];
 
