@@ -42,6 +42,7 @@ expect(execute(compileCXN("c.d[0].e.f.value"), ctx)).toBe(ctx.c.d[0].e.f.value);
 - [x] NOT
 - [x] IN
 - [x] IS
+- [x] EXISTS
 
 ## Reference Evaluation
 

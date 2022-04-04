@@ -26,7 +26,7 @@ type CompareOperator = "<" | "<=" | "<>" | "=" | "!=" | ">" | ">="
 type NumericOperator = "*" | "+" | "-" | "/"
 type LogicOperator = "AND" | "OR"
 
-type operator = NumericOperator | CompareOperator | LogicOperator | "||" | "BETWEEN" | "IN" | "IS" | "LIKE" | "NOT" | "OVER" | "NULL"
+type operator = NumericOperator | CompareOperator | LogicOperator | "||" | "BETWEEN" | "IN" | "IS" | "LIKE" | "NOT" | "OVER" | "NULL" | "EXISTS"
 
 type ArrayArgs = (ref | val | AnyOperator)[];
 type NamedArgs = { [argName: string]: (ref | val) };

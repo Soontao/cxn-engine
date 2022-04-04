@@ -59,6 +59,23 @@ describe("CXN Test Suite", () => {
     expect(execute(compileCXN("'abc' like 'abcd'"))).toBe(false);
   });
 
+  it("should support exists operator", () => {
+    const ctx = {
+      a: ["1", "2", 3, 4, [], 0],
+      b: [{ c: 1 }, { c: 2, name: "a name" }, { c: 3 }, {}],
+      c: { d: [{ e: { f: { value: 1 } } }] },
+      e: []
+    };
+
+    expect(execute(compileCXN("exists a"), ctx)).toBe(true);
+    expect(execute(compileCXN("exists a[0]"), ctx)).toBe(true);
+    expect(execute(compileCXN("exists b[0]"), ctx)).toBe(true);
+    expect(execute(compileCXN("exists c.d[e.f.value=1]"), ctx)).toBe(true);
+    expect(execute(compileCXN("exists a[4]"), ctx)).toBe(false);
+    expect(execute(compileCXN("exists a[5]"), ctx)).toBe(false);
+    expect(execute(compileCXN("exists b[3]"), ctx)).toBe(false);
+  });
+
   it("should support not like", () => {
     expect(execute(compileCXN("'abc' not like 'a'"))).toBe(false);
     expect(execute(compileCXN("'abc' not like 'ab'"))).toBe(false);

@@ -126,6 +126,28 @@ const opRules: Array<OperatorRule> = [
     valueNum: 2,
     calculate: ([left, right]) => Boolean(left) || Boolean(right),
   },
+  {
+    opParts: ["exists"],
+    valueNum: 1,
+    calculate: ([value]) => {
+      if (value === null || value === undefined) {
+        return false;
+      }
+      if (typeof value === "string") {
+        return value.length > 0;
+      }
+      if (value instanceof Array) {
+        return value.length > 0;
+      }
+      if (typeof value === "object" && Object.getPrototypeOf(value) === Object.prototype) {
+        return Object.keys(value).length > 0;
+      }
+      if (typeof value === "number" || typeof value === "bigint") {
+        return value !== 0;
+      }
+      return true;
+    }
+  }
 ];
 
 class OperatorStore {

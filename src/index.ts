@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { isFuncExpr, isRefExpr, isValExpr, isXprExpr } from "./expr";
+import { isBindingParamExpr, isFuncExpr, isRefExpr, isValExpr, isXprExpr } from "./expr";
 import { processFunc } from "./func";
 import { processRef } from "./ref";
 import { processXprNew } from "./xpr";
@@ -38,6 +38,9 @@ function execute(expr: any, context?: any): any {
   }
   if (isFuncExpr(expr)) {
     return processFunc(expr as any, context);
+  }
+  if (isBindingParamExpr(expr)) {
+    // TODO: something
   }
   // TODO: throw error
 

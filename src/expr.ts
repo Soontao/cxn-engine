@@ -1,7 +1,7 @@
-import { func, ref, val, xpr } from "./type";
+import { func, param, ref, val, xpr } from "./type";
 
 
-export function isBindingParamExpr(expr: any): expr is ref {
+export function isBindingParamExpr(expr: any): expr is param {
   return typeof expr === "object" && "ref" in expr && expr?.param === true;
 }
 
