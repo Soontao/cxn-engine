@@ -64,15 +64,18 @@ describe("CXN Test Suite", () => {
       a: ["1", "2", 3, 4, [], 0],
       b: [{ c: 1 }, { c: 2, name: "a name" }, { c: 3 }, {}],
       c: { d: [{ e: { f: { value: 1 } } }] },
-      e: []
+      e: [],
+      f: Symbol("a")
     };
 
     expect(execute(compileCXN("exists a"), ctx)).toBe(true);
     expect(execute(compileCXN("exists a[0]"), ctx)).toBe(true);
     expect(execute(compileCXN("exists b[0]"), ctx)).toBe(true);
     expect(execute(compileCXN("exists c.d[e.f.value=1]"), ctx)).toBe(true);
+    expect(execute(compileCXN("exists f"), ctx)).toBe(true);
     expect(execute(compileCXN("exists a[4]"), ctx)).toBe(false);
     expect(execute(compileCXN("exists a[5]"), ctx)).toBe(false);
+    expect(execute(compileCXN("exists a[1000]"), ctx)).toBe(false);
     expect(execute(compileCXN("exists b[3]"), ctx)).toBe(false);
   });
 
