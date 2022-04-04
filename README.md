@@ -72,4 +72,7 @@ expect(execute(compileCXN("c.d[0].e.f.value"), ctx)).toBe(ctx.c.d[0].e.f.value);
 - [ ] disable prototype access
 - [ ] execution timeout
 
+## [CHANGELOG](./CHANGELOG.md)
+
 ## [LICENSE](./LICENSE)
+
