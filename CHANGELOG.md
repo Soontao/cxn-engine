@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.3](https://github.com/Soontao/cxn-engine/compare/v0.0.2...v0.0.3) (2022-04-12)
+
+
+### Features
+
+* not exists ([c14c85e](https://github.com/Soontao/cxn-engine/commit/c14c85e756f3c418e6065cb3109dddf9246af2fa))
+* quoted literal, numeric op order ([f2810b8](https://github.com/Soontao/cxn-engine/commit/f2810b84e2e89580a30d86aecec891a18386a9c9))
+* support 'EXISTS' op ([881ac23](https://github.com/Soontao/cxn-engine/commit/881ac235d5ad58743ad3eb13cbbd81acecd4229c))
+
 ### 0.0.2 (2022-04-04)
 
 
