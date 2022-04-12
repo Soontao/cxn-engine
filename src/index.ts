@@ -3,7 +3,8 @@
 import { isBindingParamExpr, isFuncExpr, isRefExpr, isValExpr, isXprExpr } from "./expr";
 import { processFunc } from "./func";
 import { processRef } from "./ref";
-import { processXprNew } from "./xpr";
+import { processVal } from "./val";
+import { processXprV2 } from "./xpr";
 
 
 function createEngine<T extends { [exprName: string]: string }>(config: T): { [key in keyof T]: (context: any) => any } {
@@ -28,13 +29,13 @@ function createEngine<T extends { [exprName: string]: string }>(config: T): { [k
 function execute(expr: any, context?: any): any {
 
   if (isValExpr(expr)) {
-    return expr.val;
+    return processVal(expr);
   }
   if (isRefExpr(expr)) {
     return processRef(expr, context);
   }
   if (isXprExpr(expr)) {
-    return processXprNew(expr, context);
+    return processXprV2(expr, context);
   }
   if (isFuncExpr(expr)) {
     return processFunc(expr as any, context);

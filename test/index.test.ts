@@ -19,13 +19,6 @@ describe("CXN Test Suite", () => {
     expect(execute(compileCXN("2.32"))).toBe(2.32);
   });
 
-  it("should support basic operator", () => {
-    expect(execute(compileCXN("2 * 2 + 1"))).toBe(5);
-    expect(execute(compileCXN("2 * (2 + 1)"))).toBe(6);
-    expect(execute(compileCXN("2 * (2 - 1)"))).toBe(2);
-    expect(execute(compileCXN("2 / (2 - 1)"))).toBe(2);
-  });
-
   it("should support logic operator", () => {
 
     expect(execute(compileCXN("1 and 1"))).toBe(true);
@@ -153,6 +146,21 @@ describe("CXN Test Suite", () => {
     expect(execute(compileCXN("first(b[c=2])"), ctx)).toBe(ctx.b[1]);
     expect(execute(compileCXN("b[c=2].name"), ctx)).toBe(ctx.b[1].name);
     expect(execute(compileCXN("c.d[0].e.f.value"), ctx)).toBe(ctx.c.d[0].e.f.value);
+  });
+
+  it("should support __index property", () => {
+    const ctx = {
+      a: ["1", "2", 3, 4],
+    };
+    expect(execute(compileCXN("a[__index=1]"), ctx)).toStrictEqual([ctx.a[1]]);
+  });
+
+  it("should support __index complex", () => {
+    const ctx = {
+      a: ["1", "2", 3, 4],
+    };
+    expect(execute(compileCXN("a[__index=1 or __index=2]"), ctx))
+      .toStrictEqual([ctx.a[1], ctx.a[2]]);
   });
 
   it("should support basic functions", () => {

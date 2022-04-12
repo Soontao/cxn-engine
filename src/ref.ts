@@ -1,7 +1,7 @@
 import { execute } from "./index";
-import { ref } from "./type";
+import { Context, ref } from "./type";
 
-export function processRef({ ref: refs }: ref, context?: any) {
+export function processRef({ ref: refs }: ref, context?: Context) {
   let localContext = context;
 
 
@@ -37,12 +37,15 @@ export function processRef({ ref: refs }: ref, context?: any) {
           // c[1] => object
           if (ref.where.length === 1 && typeof ref.where[0]?.val === "number") {
             localContext = tmpContext[ref.where[0].val];
-          
+
             continue;
           }
+          // TODO: error when `c[1 or 2 or 3]` or transform
           // c[a=1] => list
           else {
-            localContext = Array.from(tmpContext).filter(tmpContextItem => execute({ xpr: ref.where }, tmpContextItem));
+            localContext = Array
+              .from(tmpContext)
+              .filter((tmpContextItem, __index) => execute({ xpr: ref.where }, { ...tmpContextItem, __index }));
             continue;
           }
         } else {

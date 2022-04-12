@@ -1,4 +1,4 @@
-import { func, param, ref, val, xpr } from "./type";
+import { CXN, func, param, ref, val, xpr } from "./type";
 
 
 export function isBindingParamExpr(expr: any): expr is param {
@@ -19,4 +19,12 @@ export function isXprExpr(expr: any): expr is xpr {
 
 export function isValExpr(expr: any): expr is val {
   return typeof expr === "object" && "val" in expr;
+}
+
+export function isCXNExpr(expr: any): expr is CXN {
+  if (isValExpr(expr) || isRefExpr(expr) || isXprExpr(expr) || isFuncExpr(expr) || isBindingParamExpr(expr)) {
+    return true;
+  }
+
+  return false;
 }

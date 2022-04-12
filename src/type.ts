@@ -1,6 +1,8 @@
 /* eslint-disable max-len */
 import type { Functions } from "./func";
 
+export type Context = any
+
 /**
  * Binding Parameters
  */
@@ -17,7 +19,7 @@ export type param = {
 };
 
 export type ref = { ref: _ref }
-export type val = { val: _val }
+export type val = { val: _val, literal?: "x" | "date" | "time" | "timestamp" }
 export type xpr = { xpr: _xpr }
 export type func = { func: Functions, args: Args, xpr?: _xpr }
 
@@ -28,8 +30,8 @@ type LogicOperator = "AND" | "OR"
 
 type operator = NumericOperator | CompareOperator | LogicOperator | "||" | "BETWEEN" | "IN" | "IS" | "LIKE" | "NOT" | "OVER" | "NULL" | "EXISTS"
 
-type ArrayArgs = (ref | val | AnyOperator)[];
-type NamedArgs = { [argName: string]: (ref | val) };
+export type ArrayArgs = (ref | val | AnyOperator)[];
+export type NamedArgs = { [argName: string]: (ref | val) };
 
 export type Identifier = string
 export type ObjectQuery = { id?: string, where?: CXN, args?: CXN[] }

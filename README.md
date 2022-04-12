@@ -37,7 +37,7 @@ expect(execute(compileCXN("c.d[0].e.f.value"), ctx)).toBe(ctx.c.d[0].e.f.value);
 - [x] Logic
   - [ ] Deep Equal
 - [x] Numeric
-  - [ ] Numeric Common Order (`*` and `/` should be calculated firstly)  
+  - [x] Numeric Common Order (`*` and `/` should be calculated firstly)  
 - [x] Compare
 - [x] Like/Between
 - [x] NOT
@@ -60,10 +60,14 @@ expect(execute(compileCXN("c.d[0].e.f.value"), ctx)).toBe(ctx.c.d[0].e.f.value);
 - [x] min
 - [x] max
 - [ ] assign
-- [ ] append
+- [x] append (covered by `Array.prototype.concat`)
 - [ ] groupBy
 - [x] uuid
 - [x] nanoid
+- [x] Array.prototype.*
+- [x] Date.prototype.*
+- [x] Number.prototype.*
+- [x] String.prototype.*
 
 ## Param Binding
 
