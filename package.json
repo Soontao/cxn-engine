@@ -30,12 +30,12 @@
     "@sap/xsenv": "3.2.0"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "16.2.4",
+    "@commitlint/config-conventional": "17.0.3",
     "@types/jest": "28.1.4",
     "@types/node": "16.11.42",
     "@typescript-eslint/eslint-plugin": "5.28.0",
     "@typescript-eslint/parser": "5.28.0",
-    "commitlint": "16.3.0",
+    "commitlint": "17.0.3",
     "eslint": "8.18.0",
     "eslint-plugin-jest": "26.5.3",
     "husky": "4.3.8",
